@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+:root {
+    /* OMEJ Pollux Brand Colors */
+    --deep-blue: 222 84% 6%;
+    --gold-accent: 45 100% 47%;
+    --light-gray: 220 13% 95%;
+    --dark-gray: 220 13% 20%;
+    
+    /* Extended Color Palette */
+    --teal-accent: 176 100% 35%;
+    --orange-accent: 25 100% 58%;
+    --purple-accent: 270 50% 40%;
+    --emerald-accent: 142 76% 36%;
+    
+    --background: 0 0% 100%;
+    --foreground: var(--deep-blue);
+
+    --card: 0 0% 100%;
+    --card-foreground: var(--deep-blue);
+
+    --popover: 0 0% 100%;
+    --popover-foreground: var(--deep-blue);
+
+    --primary: var(--deep-blue);
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: var(--light-gray);
+    --secondary-foreground: var(--deep-blue);
+
+    --muted: var(--light-gray);
+    --muted-foreground: var(--dark-gray);
+
+    --accent: var(--gold-accent);
+    --accent-foreground: var(--deep-blue);
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: var(--light-gray);
+    --input: var(--light-gray);
+    --ring: var(--gold-accent);
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--deep-blue)), hsl(var(--deep-blue) / 0.9));
+    --gradient-section: linear-gradient(180deg, hsl(var(--light-gray)), hsl(var(--background)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--background)), hsl(var(--light-gray) / 0.5));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--gold-accent)), hsl(var(--orange-accent)));
+    --gradient-teal: linear-gradient(135deg, hsl(var(--teal-accent)), hsl(var(--emerald-accent)));
+    
+    /* Shadows */
+    --shadow-elegant: 0 20px 40px -12px hsl(var(--deep-blue) / 0.15);
+    --shadow-card: 0 8px 24px -6px hsl(var(--deep-blue) / 0.12);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+.dark {
+    --background: var(--deep-blue);
+    --foreground: 0 0% 98%;
+
+    --card: hsl(var(--deep-blue) / 0.95);
+    --card-foreground: 0 0% 98%;
+
+    --popover: var(--deep-blue);
+    --popover-foreground: 0 0% 98%;
+
+    --primary: var(--gold-accent);
+    --primary-foreground: var(--deep-blue);
+
+    --secondary: hsl(var(--deep-blue) / 0.8);
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: hsl(var(--deep-blue) / 0.7);
+    --muted-foreground: 220 13% 75%;
+
+    --accent: var(--gold-accent);
+    --accent-foreground: var(--deep-blue);
+
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: hsl(var(--deep-blue) / 0.3);
+    --input: hsl(var(--deep-blue) / 0.3);
+    --ring: var(--gold-accent);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .hero-pattern {
+    background-image: radial-gradient(circle at 50% 0%, hsl(var(--gold-accent) / 0.1) 0%, transparent 50%);
+  }
+  
+  .section-light {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--secondary) / 0.3));
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    box-shadow: var(--shadow-card);
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-accent text-accent-foreground hover:bg-accent/90 px-8 py-3 rounded-lg font-semibold transition-all duration-300;
+  }
+  
+  .adinkra-symbol {
+    @apply inline-block w-8 h-8 opacity-20 animate-pulse;
+  }
+  
+  .section-gradient {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--teal-accent) / 0.05), hsl(var(--gold-accent) / 0.05));
+  }
+  
+  .card-gradient {
+    background: linear-gradient(145deg, hsl(var(--background)), hsl(var(--light-gray) / 0.3));
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--gold-accent)), hsl(var(--orange-accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes gradient-x {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 3s ease infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
