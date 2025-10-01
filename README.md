@@ -1,73 +1,65 @@
-# Welcome to your Lovable project
 
-## Project info
+# OMEJ Pollux Website
 
-**URL**: https://lovable.dev/projects/72df8ce0-b6f1-4d5a-b5f2-f9036f0147cb
+The **OMEJ Pollux** website is the official web presence for OMEJ Pollux.  
+It serves as an information hub, showcasing who we are, what we do, and how to connect with us.  
 
-## How can I edit this code?
+This repository contains the source code for the website, built with HTML, CSS, and JavaScript.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🌐 Features
+- **Homepage** with hero banner and quick navigation  
+- **About section** describing the mission and vision  
+- **Services/Offerings section** highlighting what OMEJ Pollux provides  
+- **Contact page** with form and contact details  
+- **Responsive design** (works across desktop, tablet, and mobile)  
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/72df8ce0-b6f1-4d5a-b5f2-f9036f0147cb) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Getting Started
 
-**Use your preferred IDE**
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/omej-pollux.git
+cd omej-pollux
+````
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 2. Open in Browser
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Simply open the `index.html` file in your preferred web browser.
+No server setup required.
 
-Follow these steps:
+*(Optional: For live reloading, you can serve it with tools like **VS Code Live Server**.)*
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🚀 Deployment
 
-# Step 3: Install the necessary dependencies.
-npm i
+The site can be hosted on:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+* GitHub Pages
+* Netlify
+* Vercel
+* Any static web hosting provider
 
-**Edit a file directly in GitHub**
+To deploy on **GitHub Pages**:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Push code to your `main` branch
+2. In GitHub repo settings, enable **Pages** → select `main` branch → `/root`
+3. Your site will be live at:
 
-**Use GitHub Codespaces**
+   ```
+   https://your-username.github.io/omej-pollux
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 📧 Contact
 
-This project is built with:
+For inquiries and collaborations:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+* Email: Teyeandy24@gmail.com
+* Website: [https://omejpollux.org](https://omejpollux.org)
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/72df8ce0-b6f1-4d5a-b5f2-f9036f0147cb) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
