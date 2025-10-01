@@ -163,6 +163,72 @@ const CustomChat = () => {
       return greetings[Math.floor(Math.random() * greetings.length)];
     }
 
+    // Location and Address
+    if (
+      message.includes("location") ||
+      message.includes("address") ||
+      message.includes("where are you") ||
+      message.includes("find you") ||
+      message.includes("visit you")
+    ) {
+      return `📍 **Our Location:**\n\nOmej Pollux Prime Solutions\nCape Coast, Ghana\n\nWe're based in the heart of Cape Coast, serving clients across Ghana and internationally. For exact directions or to schedule an in-person visit, please contact us at +233 59 631 6230 and we'll guide you!`;
+    }
+
+    // Donation and Support
+    if (
+      message.includes("donate") ||
+      message.includes("support") ||
+      message.includes("contribute") ||
+      message.includes("fund") ||
+      message.includes("sponsor")
+    ) {
+      return `💰 **Support Our Projects - 3 Easy Steps:**\n\n1️⃣ **Choose Project**: Browse our Projects page to see initiatives needing support\n\n2️⃣ **Contact Us**: Email info@omejpollux.org with:\n   - Project you want to support\n   - Donation amount/type (financial, equipment, expertise)\n   - Your contact details\n\n3️⃣ **Receive Guidance**: We'll send you:\n   - Official donation channels\n   - Tax documentation\n   - Project impact reports\n\nYour support empowers entrepreneurs and students across Ghana! 🌟`;
+    }
+
+    // Complete Services List
+    if (
+      message.includes("service") ||
+      message.includes("offer") ||
+      message.includes("do you provide") ||
+      message.includes("what services") ||
+      message.includes("help with")
+    ) {
+      return `🛠️ **Our Complete Services:**\n\n🚀 **Business Development**\n• Startup incubation & guidance\n• Business plan development\n• Market research & analysis\n• Funding proposal assistance\n• Growth strategy planning\n\n🎓 **Academic Research Support**\n• Thesis & dissertation writing\n• Research methodology design\n• Data analysis & interpretation\n• Literature review assistance\n• Academic editing & proofreading\n\n💼 **Professional Consulting**\n• Strategic business planning\n• Operational efficiency optimization\n• Digital transformation guidance\n• Market entry strategies\n• Performance improvement\n\n🛒 **General Merchandise**\n• Quality product sourcing\n• Supply chain management\n• Retail business support\n• Product development guidance\n\nWhich service area interests you most?`;
+    }
+
+    // Registration Assistance
+    if (
+      message.includes("register") ||
+      message.includes("sign up") ||
+      message.includes("join") ||
+      message.includes("how to apply") ||
+      message.includes("become a client")
+    ) {
+      return `📝 **Registration Process - 3 Simple Steps:**\n\n1️⃣ **Visit Registration Page**: Go to our website's registration section\n\n2️⃣ **Choose Service**: Select from:\n   - Business Development Program\n   - Academic Research Support\n   - Professional Consulting\n   - Event Registration\n\n3️⃣ **Submit Details**: Provide:\n   - Contact information\n   - Service preference\n   - Project description (if any)\n\n4️⃣ **Confirmation**: You'll receive:\n   - Welcome email\n   - Service coordinator assignment\n   - Initial consultation scheduling\n\nNeed help with specific registration? I can guide you to the right page!`;
+    }
+
+    // Event Sharing
+    if (
+      message.includes("event") ||
+      message.includes("workshop") ||
+      message.includes("seminar") ||
+      message.includes("share event") ||
+      message.includes("upcoming events")
+    ) {
+      return `📅 **Events & Sharing:**\n\n🎯 **Upcoming Events**: Check our Events page for workshops, seminars, and networking sessions\n\n📱 **Share Events**: Three ways to share:\n1. Click the 'Share' button on any event page\n2. Copy the event link and send to friends\n3. Use social media sharing options\n\n🔔 **Get Notified**: Register for events and opt-in for notifications about:\n- New workshop announcements\n- Early bird registration\n- Exclusive networking opportunities\n\nWant me to help you find a specific type of event?`;
+    }
+
+    // Projects List
+    if (
+      message.includes("project") ||
+      message.includes("initiative") ||
+      message.includes("program") ||
+      message.includes("what projects") ||
+      message.includes("current work")
+    ) {
+      return `🌟 **Our Current Projects & Initiatives:**\n\n🏢 **Business Projects**\n• Startup Accelerator Program\n• SME Growth Initiative\n• Women Entrepreneurship Support\n• Agricultural Business Development\n\n🎓 **Academic Projects**\n• Student Research Grant Program\n• Thesis Completion Support\n• Academic Writing Workshops\n• Research Methodology Training\n\n🌍 **Community Projects**\n• Youth Skills Development\n• Digital Literacy Program\n• Community Business Hub\n• Sustainable Development Initiatives\n\n💡 **Innovation Projects**\n• Tech Startup Incubation\n• Creative Industry Support\n• Green Business Initiatives\n• Digital Transformation Program\n\nInterested in any specific project? I can provide more details!`;
+    }
+
     // Website information and services
     if (
       message.includes("what do you do") ||
@@ -171,24 +237,7 @@ const CustomChat = () => {
       message.includes("who are you") ||
       message.includes("about omej pollux")
     ) {
-      return `Omej Pollux is a premier consulting firm offering:\n\n🚀 **Business Development**: Startup guidance, market research, funding assistance\n🎓 **Academic Research**: Thesis support, data analysis, methodology design\n💼 **Professional Consulting**: Strategic planning, operational efficiency\n\nWe empower entrepreneurs, students, and businesses to achieve their goals through expert guidance and comprehensive support services. What specific area interests you most?`;
-    }
-
-    if (
-      message.includes("service") ||
-      message.includes("offer") ||
-      message.includes("do you provide") ||
-      message.includes("what services")
-    ) {
-      return "We offer three main service areas:\n\n• **Business Development** - Startup guidance, market research, funding\n• **Academic Research Support** - Thesis help, data analysis, methodology\n• **Professional Consulting** - Strategic planning, efficiency optimization\n\nWhich service are you most interested in learning about?";
-    }
-
-    if (
-      message.includes("event") ||
-      message.includes("workshop") ||
-      message.includes("seminar")
-    ) {
-      return "We host various workshops, seminars, and networking events! Check our Events page for upcoming sessions. Would you like me to help you find a suitable event or learn about our past events?";
+      return `Omej Pollux is a premier consulting firm offering:\n\n🚀 **Business Development**: Startup guidance, market research, funding assistance\n🎓 **Academic Research**: Thesis support, data analysis, methodology design\n💼 **Professional Consulting**: Strategic planning, operational efficiency\n🛒 **General Merchandise**: Quality products and retail support\n\nWe empower entrepreneurs, students, and businesses to achieve their goals through expert guidance and comprehensive support services. What specific area interests you most?`;
     }
 
     if (
@@ -236,14 +285,6 @@ const CustomChat = () => {
     }
 
     if (
-      message.includes("register") ||
-      message.includes("sign up") ||
-      message.includes("join")
-    ) {
-      return "You can register for our events through the Events page. For service consultations, please contact us directly to schedule a meeting. Would you like me to guide you to the registration page or help you contact our team?";
-    }
-
-    if (
       message.includes("hour") ||
       message.includes("time") ||
       message.includes("open") ||
@@ -285,18 +326,21 @@ const CustomChat = () => {
         message === "ok")
     ) {
       if (userContext.lastUserQuestion.includes("service")) {
-        return "Great! Which service area interests you most:\n\n• Business Development\n• Academic Research\n• Professional Consulting\n\nOr would you like detailed information about all three?";
+        return "Great! Which service area interests you most:\n\n• Business Development\n• Academic Research\n• Professional Consulting\n• General Merchandise\n\nOr would you like detailed information about all services?";
       }
       if (userContext.lastUserQuestion.includes("event")) {
         return "Excellent! You can browse all our events on the Events page. Would you like me to tell you about our most popular upcoming workshop, or do you have a specific type of event in mind?";
+      }
+      if (userContext.lastUserQuestion.includes("project")) {
+        return "Wonderful! Our projects are categorized into Business, Academic, Community, and Innovation areas. Which category would you like to explore further?";
       }
     }
 
     // Default response with engagement
     const defaultResponses = [
       "That's an interesting question! Our team at Omej Pollux specializes in helping with various challenges. Could you tell me a bit more about what you're looking for?",
-      "I'd love to help you with that! At Omej Pollux, we focus on business development, academic research, and professional consulting. Which area aligns with your needs?",
-      "Thank you for your message! To better assist you, could you let me know if you're interested in our business services, academic support, or consulting solutions?",
+      "I'd love to help you with that! At Omej Pollux, we focus on business development, academic research, professional consulting, and merchandise. Which area aligns with your needs?",
+      "Thank you for your message! To better assist you, could you let me know if you're interested in our business services, academic support, consulting solutions, or project support?",
       "I appreciate your question! We at Omej Pollux are dedicated to empowering growth and success. How can I direct you to the right solution today?",
     ];
 
@@ -348,7 +392,7 @@ const CustomChat = () => {
               variant="secondary"
               className="w-fit bg-green-500 text-white"
             >
-              Online • Smart Assistant
+              Online •
             </Badge>
           </CardHeader>
 
@@ -404,7 +448,7 @@ const CustomChat = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                Intelligent assistant • Learns as we chat
+                Ask me about services, events, projects, or donations!
               </p>
             </div>
           </CardContent>
