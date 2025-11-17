@@ -3,11 +3,17 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, Users, Plus, Loader2 } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Plus, Loader2, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const EventsPage = () => {
   const { toast } = useToast();
@@ -85,6 +91,46 @@ const EventsPage = () => {
     toast({
       title: "Calendar Event",
       description: "Opening Google Calendar to add this event",
+    });
+  };
+
+  const handleShare = (event: any, platform: string) => {
+    const eventUrl = `${window.location.origin}/events?event=${event.id}`;
+    const shareText = `Check out this event: ${event.title} - ${formatEventDate(event.event_date)} at ${event.location}`;
+    
+    let shareUrl = "";
+    
+    switch (platform) {
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText + " " + eventUrl)}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(eventUrl)}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`;
+        break;
+      case "email":
+        shareUrl = `mailto:?subject=${encodeURIComponent(event.title)}&body=${encodeURIComponent(shareText + "\n\n" + eventUrl)}`;
+        break;
+      default:
+        // Copy to clipboard
+        navigator.clipboard.writeText(eventUrl);
+        toast({
+          title: "Link Copied",
+          description: "Event link copied to clipboard",
+        });
+        return;
+    }
+    
+    window.open(shareUrl, "_blank");
+    
+    toast({
+      title: "Sharing Event",
+      description: `Opening ${platform} to share this event`,
     });
   };
 
@@ -214,6 +260,33 @@ const EventsPage = () => {
                         >
                           <Plus className="w-4 h-4" />
                         </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon">
+                              <Share2 className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleShare(event, "whatsapp")}>
+                              Share on WhatsApp
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare(event, "twitter")}>
+                              Share on Twitter
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare(event, "linkedin")}>
+                              Share on LinkedIn
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare(event, "facebook")}>
+                              Share on Facebook
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare(event, "email")}>
+                              Share via Email
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare(event, "copy")}>
+                              Copy Link
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     )}
                   </CardContent>

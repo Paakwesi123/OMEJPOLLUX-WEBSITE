@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import emailjs from "@emailjs/browser";
 
 const BookingPage = () => {
   const { toast } = useToast();
@@ -34,23 +35,53 @@ const BookingPage = () => {
         email: formData.email,
         phone: formData.phone,
         message: `Service Type: ${formData.serviceType}\nPreferred Date: ${formData.preferredDate}\nPreferred Time: ${formData.preferredTime}\n\nMessage: ${formData.message}`,
-        form_type: 'consultation' as const,
+        form_type: "consultation" as const,
         additional_data: {
           serviceType: formData.serviceType,
           preferredDate: formData.preferredDate,
-          preferredTime: formData.preferredTime
-        }
+          preferredTime: formData.preferredTime,
+        },
       };
 
-      const { error } = await supabase
-        .from('form_submissions')
-        .insert([submissionData]);
-
+      // Save in Supabase
+      const { error } = await supabase.from("form_submissions").insert([submissionData]);
       if (error) throw error;
+
+      // Fire email to client
+      await emailjs.send(
+        "service_x0fqa5s",        // 🔑 replace with EmailJS service ID
+        "template_xgbinrn",     // 🔑 replace with client template ID
+        {
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          serviceType: formData.serviceType,
+          preferredDate: formData.preferredDate,
+          preferredTime: formData.preferredTime,
+          message: formData.message,
+        },
+        "J5RxqIhrvaUY3iCYh"         // 🔑 replace with EmailJS public key
+      );
+
+      // Fire email to admin
+      await emailjs.send(
+        "service_x0fqa5s",        // 🔑 same service ID
+        "template_pdueneh",      // 🔑 replace with admin template ID
+        {
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          serviceType: formData.serviceType,
+          preferredDate: formData.preferredDate,
+          preferredTime: formData.preferredTime,
+          message: formData.message,
+        },
+        "J5RxqIhrvaUY3iCYh"
+      );
 
       toast({
         title: "Consultation Booked!",
-        description: "We'll contact you within 24 hours to confirm your appointment.",
+        description: "We'll contact you within 24 hours to confirm your appointment. A confirmation email has been sent.",
       });
 
       // Reset form
@@ -61,9 +92,10 @@ const BookingPage = () => {
         serviceType: "",
         preferredDate: "",
         preferredTime: "",
-        message: ""
+        message: "",
       });
     } catch (error: any) {
+      console.error("Error submitting booking form:", error);
       toast({
         title: "Submission failed",
         description: error.message || "Please try again later.",
@@ -75,13 +107,13 @@ const BookingPage = () => {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/10 to-background">
       <Navbar />
-      
+
       {/* Subtle Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-20 left-10 opacity-5">

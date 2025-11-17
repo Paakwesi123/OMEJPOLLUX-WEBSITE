@@ -8,6 +8,7 @@ import { CheckCircle, Package, Truck, Shield, ArrowRight, Building, FileCheck, C
 import generalMerchandiseImage from "@/assets/general-merchandise.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import ContactForm from "@/components/forms/ContactForm";
+import AdsRotator from "@/components/AdsRotator";
 
 const GeneralMerchandisePage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,12 @@ const GeneralMerchandisePage = () => {
     <div className="min-h-screen">
       <Navbar />
       
+      <section className="py-10 bg-background">
+  <div className="container mx-auto px-4">
+    <AdsRotator />
+  </div>
+</section>
+
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-primary to-primary/90 text-primary-foreground overflow-hidden">
         <div className="absolute inset-0 section-gradient opacity-20"></div>
@@ -85,18 +92,7 @@ const GeneralMerchandisePage = () => {
       </section>
 
       {/* Image Section */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto animate-fade-in">
-           <img 
-  src="https://images.unsplash.com/photo-1586880244406-556ebe35f282?q=80&w=2070&auto=format&fit=crop" 
-  alt="General Merchandise Supplies" 
-  className="w-full h-[400px] object-cover rounded-2xl shadow-2xl"
-/>
- 
-          </div>
-        </div>
-      </section>
+      
 
       {/* Services Grid */}
       <section className="py-20 section-gradient">

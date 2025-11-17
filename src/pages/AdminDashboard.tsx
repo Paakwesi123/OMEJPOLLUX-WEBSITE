@@ -32,6 +32,7 @@ import {
   Upload,
   X,
   FileText,
+  ShoppingCart,  // Add this if missing
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -55,13 +56,17 @@ export default function AdminDashboard() {
   const [showJobForm, setShowJobForm] = useState(false);
   const [showSubmissionDetails, setShowSubmissionDetails] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
-  
+  const [showProductDetails, setShowProductDetails] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   // Editing states
   const [editingProject, setEditingProject] = useState(null);
   const [editingService, setEditingService] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
+  const [orders, setOrders] = useState([]);
+const [showOrderDetails, setShowOrderDetails] = useState(false);
+const [selectedOrder, setSelectedOrder] = useState(null);
 
   // Add these states after the existing ones
 const [contacts, setContacts] = useState([]);
@@ -95,7 +100,8 @@ const [showContactManager, setShowContactManager] = useState(false);
       loadProducts(),
       loadEvents(),
       loadFormSubmissions(),
-      loadJobs()
+      loadJobs(),
+      loadOrders()
     ]).finally(() => {
       setLoading(false);
     });
@@ -288,6 +294,22 @@ const [showContactManager, setShowContactManager] = useState(false);
       setJobs([]);
     }
   };
+  const loadOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error('Error loading orders:', error);
+      } else {
+        setOrders(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      setOrders([]);
+    }
+  };
 
   // Job Management Functions
   const handleJobSubmit = async (e) => {
@@ -418,6 +440,29 @@ const [showContactManager, setShowContactManager] = useState(false);
       }
     }
   };
+  const handleToggleStock = async (product) => {
+  try {
+    const { error } = await supabase
+      .from('products')
+      .update({ in_stock: !product.in_stock })
+      .eq('id', product.id);
+    
+    if (error) throw error;
+    
+    toast({ 
+      title: "Stock status updated",
+      description: `${product.name} is now ${!product.in_stock ? 'in stock' : 'out of stock'}`
+    });
+    loadProducts();
+  } catch (error) {
+    console.error('Error toggling stock:', error);
+    toast({ 
+      title: "Error updating stock status",
+      description: error.message,
+      variant: "destructive"
+    });
+  }
+};
   const handleDeleteEvent = async (event) => {
     if (confirm('Are you sure you want to delete this event?')) {
       const { error } = await supabase.from('events').delete().eq('id', event.id);
@@ -508,6 +553,12 @@ const [showContactManager, setShowContactManager] = useState(false);
       value: jobs.length.toString(),
       icon: Briefcase,
       color: "text-indigo-600"
+    },
+    {
+      title: "Total Orders",
+      value: orders.length.toString(),
+      icon: ShoppingCart,
+      color: "text-orange-600"
     }
   ];
 
@@ -536,7 +587,7 @@ const [showContactManager, setShowContactManager] = useState(false);
 
       <div className="container mx-auto px-4 py-8">
          <Tabs defaultValue="overview" className="w-full">
-<TabsList className="grid w-full grid-cols-9">
+         <TabsList className="grid w-full grid-cols-10">
   <TabsTrigger value="overview">Overview</TabsTrigger>
   <TabsTrigger value="projects">Projects</TabsTrigger>
   <TabsTrigger value="services">Services</TabsTrigger>
@@ -546,6 +597,7 @@ const [showContactManager, setShowContactManager] = useState(false);
   <TabsTrigger value="submissions">Submissions</TabsTrigger>
   <TabsTrigger value="contacts">Contacts</TabsTrigger>
   <TabsTrigger value="academic">Academic</TabsTrigger>
+  <TabsTrigger value="orders">Orders</TabsTrigger>
 </TabsList>
 
           {/* Overview Tab */}
@@ -1023,70 +1075,81 @@ const [showContactManager, setShowContactManager] = useState(false);
             </Card>
           </TabsContent>
 
-          <TabsContent value="catalog" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Manage Catalog</h2>
-              <Button onClick={() => setShowProductForm(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Product
-              </Button>
-            </div>
-            
-            <Card>
-              <CardContent className="p-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Stock Status</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {products.map((product) => (
-                      <TableRow key={product.id}>
-                        <TableCell className="font-medium">{product.name}</TableCell>
-                        <TableCell>{product.category}</TableCell>
-                        <TableCell>
-                          {product.price ? `GHS ${parseFloat(product.price).toFixed(2)}` : 'N/A'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={product.in_stock ? 'default' : 'destructive'}>
-                            {product.in_stock ? 'In Stock' : 'Out of Stock'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{new Date(product.created_at).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                setEditingProduct(product);
-                                setShowProductForm(true);
-                              }}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDeleteProduct(product)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
+        <TabsContent value="catalog" className="space-y-6">
+  <div className="flex justify-between items-center">
+    <h2 className="text-2xl font-bold">Manage Catalog</h2>
+    <Button onClick={() => setShowProductForm(true)}>
+      <Plus className="w-4 h-4 mr-2" />
+      Add Product
+    </Button>
+  </div>
+  
+  <Card>
+    <CardContent className="p-6">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Stock Status</TableHead>
+            <TableHead>Created</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {products.map((product) => (
+            <TableRow 
+              key={product.id}
+              className="cursor-pointer hover:bg-gray-50"
+              onClick={() => {
+                setSelectedProduct(product);
+                setShowProductDetails(true);
+              }}
+            >
+              <TableCell className="font-medium">{product.name}</TableCell>
+              <TableCell>{product.category}</TableCell>
+              <TableCell>
+                {product.price ? `GHS ${parseFloat(product.price).toFixed(2)}` : 'N/A'}
+              </TableCell>
+              <TableCell>
+                <Badge variant={product.in_stock ? 'default' : 'destructive'}>
+                  {product.in_stock ? 'In Stock' : 'Out of Stock'}
+                </Badge>
+              </TableCell>
+              <TableCell>{new Date(product.created_at).toLocaleDateString()}</TableCell>
+              <TableCell onClick={(e) => e.stopPropagation()}>
+                <div className="flex space-x-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingProduct(product);
+                      setShowProductForm(true);
+                    }}
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteProduct(product);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </CardContent>
+  </Card>
+</TabsContent>
 
 {/* Contacts Tab */}
 <TabsContent value="contacts" className="space-y-6">
@@ -1217,6 +1280,82 @@ const [showContactManager, setShowContactManager] = useState(false);
             </Card>
           ))}
         </div>
+      )}
+    </CardContent>
+  </Card>
+</TabsContent>
+{/* Orders Tab */}
+<TabsContent value="orders" className="space-y-6">
+  <div className="flex justify-between items-center">
+    <h2 className="text-2xl font-bold">Customer Orders</h2>
+    <div className="flex gap-2">
+      <Badge variant="outline">Total: {orders.length}</Badge>
+      <Badge variant="default">
+        Revenue: GHS {orders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0).toFixed(2)}
+      </Badge>
+    </div>
+  </div>
+  
+  <Card>
+    <CardContent className="p-6">
+      {orders.length === 0 ? (
+        <div className="text-center py-8 text-muted-foreground">
+          <ShoppingCart className="w-12 h-12 mx-auto mb-2 opacity-50" />
+          <p>No orders yet</p>
+        </div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order ID</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Product</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Payment Status</TableHead>
+              <TableHead>Order Date</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell className="font-mono text-xs">
+                  {order.id.slice(0, 8)}...
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <p className="font-medium">{order.customer_name}</p>
+                    <p className="text-xs text-muted-foreground">{order.customer_email}</p>
+                  </div>
+                </TableCell>
+                <TableCell>{order.product_name}</TableCell>
+                <TableCell className="font-semibold">
+                  GHS {parseFloat(order.amount).toFixed(2)}
+                </TableCell>
+                <TableCell>
+                  <Badge variant={order.payment_status === 'completed' ? 'default' : 'secondary'}>
+                    {order.payment_status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {new Date(order.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setShowOrderDetails(true);
+                    }}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </CardContent>
   </Card>
@@ -1550,6 +1689,268 @@ const [showContactManager, setShowContactManager] = useState(false);
             }}
           >
             Reply via Email
+          </Button>
+        </div>
+      </div>
+    )}
+  </DialogContent>
+</Dialog>
+{/* Order Details Modal */}
+<Dialog open={showOrderDetails} onOpenChange={setShowOrderDetails}>
+  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+    <DialogHeader>
+      <div className="flex items-center justify-between">
+        <DialogTitle>Order Details</DialogTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowOrderDetails(false)}
+        >
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
+    </DialogHeader>
+    
+    {selectedOrder && (
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label className="font-semibold">Order ID</Label>
+            <p className="mt-1 p-2 bg-gray-50 rounded font-mono text-sm">
+              {selectedOrder.id}
+            </p>
+          </div>
+          
+          <div>
+            <Label className="font-semibold">Payment Reference</Label>
+            <p className="mt-1 p-2 bg-gray-50 rounded font-mono text-sm">
+              {selectedOrder.payment_reference}
+            </p>
+          </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <h3 className="font-semibold mb-3">Customer Information</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label className="font-semibold">Name</Label>
+              <p className="mt-1 p-2 bg-gray-50 rounded">{selectedOrder.customer_name}</p>
+            </div>
+            
+            <div>
+              <Label className="font-semibold">Email</Label>
+              <p className="mt-1 p-2 bg-gray-50 rounded">{selectedOrder.customer_email}</p>
+            </div>
+            
+            <div>
+              <Label className="font-semibold">Phone</Label>
+              <p className="mt-1 p-2 bg-gray-50 rounded">{selectedOrder.customer_phone}</p>
+            </div>
+            
+            <div>
+              <Label className="font-semibold">Payment Status</Label>
+              <p className="mt-1">
+                <Badge variant={selectedOrder.payment_status === 'completed' ? 'default' : 'secondary'}>
+                  {selectedOrder.payment_status}
+                </Badge>
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-4">
+            <Label className="font-semibold">Delivery Address</Label>
+            <p className="mt-1 p-3 bg-gray-50 rounded">{selectedOrder.customer_address}</p>
+          </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <h3 className="font-semibold mb-3">Order Details</h3>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-medium">Product:</span>
+              <span>{selectedOrder.product_name}</span>
+            </div>
+            <div className="flex justify-between items-center text-lg font-bold">
+              <span>Total Amount:</span>
+              <span className="text-primary">GHS {parseFloat(selectedOrder.amount).toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <div className="flex justify-between items-center text-sm text-muted-foreground">
+            <span>Order Date:</span>
+            <span>{new Date(selectedOrder.created_at).toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-4 border-t">
+          <Button
+            variant="outline"
+            onClick={() => {
+              const subject = encodeURIComponent(`Order Confirmation - ${selectedOrder.payment_reference}`);
+              const body = encodeURIComponent(
+                `Hi ${selectedOrder.customer_name},\n\n` +
+                `Thank you for your order of ${selectedOrder.product_name}.\n\n` +
+                `Order ID: ${selectedOrder.id}\n` +
+                `Amount: GHS ${parseFloat(selectedOrder.amount).toFixed(2)}\n\n` +
+                `We will process your order shortly.\n\n` +
+                `Best regards,\nYour Team`
+              );
+              window.open(`mailto:${selectedOrder.customer_email}?subject=${subject}&body=${body}`);
+            }}
+          >
+            Email Customer
+          </Button>
+          
+          <Button
+            onClick={() => {
+              toast({ 
+                title: "Order Marked as Delivered",
+                description: "Customer will be notified"
+              });
+              setShowOrderDetails(false);
+            }}
+          >
+            Mark as Delivered
+          </Button>
+        </div>
+      </div>
+    )}
+  </DialogContent>
+</Dialog>
+{/* Product Details Modal */}
+<Dialog open={showProductDetails} onOpenChange={setShowProductDetails}>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <div className="flex items-center justify-between">
+        <DialogTitle>Product Details</DialogTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowProductDetails(false)}
+        >
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
+    </DialogHeader>
+    
+    {selectedProduct && (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          {selectedProduct.image_url && (
+            <img 
+              src={selectedProduct.image_url} 
+              alt={selectedProduct.name}
+              className="w-32 h-32 object-cover rounded-lg"
+            />
+          )}
+          <div>
+            <h3 className="text-xl font-bold">{selectedProduct.name}</h3>
+            <p className="text-muted-foreground">{selectedProduct.category}</p>
+          </div>
+        </div>
+
+        <div>
+          <Label className="font-semibold">Description</Label>
+          <p className="mt-1 p-3 bg-gray-50 rounded">{selectedProduct.description}</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="productPrice" className="font-semibold">Price (GHS)</Label>
+            <Input
+              id="productPrice"
+              type="number"
+              step="0.01"
+              defaultValue={selectedProduct.price}
+              onBlur={async (e) => {
+                const newPrice = parseFloat(e.target.value);
+                if (newPrice && newPrice !== parseFloat(selectedProduct.price)) {
+                  try {
+                    const { error } = await supabase
+                      .from('products')
+                      .update({ price: newPrice })
+                      .eq('id', selectedProduct.id);
+                    
+                    if (error) throw error;
+                    
+                    toast({ title: "Price updated successfully" });
+                    setSelectedProduct({ ...selectedProduct, price: newPrice });
+                    loadProducts();
+                  } catch (error) {
+                    toast({ 
+                      title: "Error updating price",
+                      description: error.message,
+                      variant: "destructive"
+                    });
+                  }
+                }
+              }}
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label className="font-semibold">Stock Status</Label>
+            <div className="mt-1">
+              <Button
+                variant={selectedProduct.in_stock ? "default" : "secondary"}
+                className="w-full"
+                onClick={async () => {
+                  try {
+                    const { error } = await supabase
+                      .from('products')
+                      .update({ in_stock: !selectedProduct.in_stock })
+                      .eq('id', selectedProduct.id);
+                    
+                    if (error) throw error;
+                    
+                    toast({ 
+                      title: "Stock status updated",
+                      description: `${selectedProduct.name} is now ${!selectedProduct.in_stock ? 'in stock' : 'out of stock'}`
+                    });
+                    setSelectedProduct({ ...selectedProduct, in_stock: !selectedProduct.in_stock });
+                    loadProducts();
+                  } catch (error) {
+                    toast({ 
+                      title: "Error updating stock status",
+                      description: error.message,
+                      variant: "destructive"
+                    });
+                  }
+                }}
+              >
+                {selectedProduct.in_stock ? "In Stock ✓" : "Out of Stock ✗"}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between pt-4 border-t">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setEditingProduct(selectedProduct);
+              setShowProductDetails(false);
+              setShowProductForm(true);
+            }}
+          >
+            <Edit className="w-4 h-4 mr-2" />
+            Full Edit
+          </Button>
+          
+          <Button
+            variant="destructive"
+            onClick={async () => {
+              if (confirm('Are you sure you want to delete this product?')) {
+                await handleDeleteProduct(selectedProduct);
+                setShowProductDetails(false);
+              }
+            }}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Product
           </Button>
         </div>
       </div>

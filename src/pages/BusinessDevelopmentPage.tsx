@@ -177,7 +177,7 @@ const BusinessDevelopmentPage = () => {
                 size="lg" 
                 variant="outline"
                 className="border-primary-foreground bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground hover:text-primary backdrop-blur-sm font-semibold"
-                onClick={() => window.open('https://wa.me/233243156093', '_blank')}
+                onClick={() => window.open('https://wa.me/233596316230', '_blank')}
               >
                 <Phone className="mr-2 w-5 h-5" />
                 WhatsApp Us

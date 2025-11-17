@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 
+
 const Home = () => {
   const testimonials = [
     {

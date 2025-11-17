@@ -122,7 +122,7 @@ const AboutPage = () => {
               About OMEJ Pollux
             </h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Empowering Ghana's future through innovative consultancy services, 
+              Empowering the future through innovative consultancy services, 
               academic excellence, and strategic business solutions.
             </p>
           </div>
